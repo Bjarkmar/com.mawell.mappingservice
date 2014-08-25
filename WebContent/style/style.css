@@ -1,0 +1,395 @@
+/*
+*
+*
+*	MCP 251 style.css
+*
+*
+*/
+
+/*GENERIC STYLES*/
+
+
+body{
+	font-family: Arial,sans-serif;
+	margin: 0;
+}
+
+.float_left{
+	float: left;
+	margin-left: -5px;
+}
+
+.float_right{
+	float: right;
+	margin-right: -5px;
+}
+
+.clearFix{
+    clear: both;
+    height: 0px;
+    overflow: hidden;
+    line-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-size: 0;
+}
+
+.borderRadius{
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	-khtml-border-radius: 2px;
+}
+
+.boxShadow{
+	-webkit-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.35);
+	-moz-box-shadow:    1px 1px 2px 0px rgba(50, 50, 50, 0.35);
+	box-shadow:         1px 1px 2px 0px rgba(50, 50, 50, 0.35);
+}
+
+
+a{
+	text-decortaion: none;
+}
+
+#divError{
+	height: auto;
+	display: none;
+}
+
+.error{
+	position: fixed;
+	background-color: #F2F2F2;
+	color: #CF3838;
+	padding: 10px;
+	border: 1px solid #e5e5e5;
+	left: 515px;
+	top: 0;
+	width: 100%;
+	left: 0;
+	height: auto;
+	font-size: 12px;
+	display: block;
+}
+
+.closeErrorShow{
+	position: fixed;
+	right: 8px;
+	top: 9px;
+	width: 15px;
+	height: 15px;
+	background-image: url(../images/close.png);
+	background-repeat: no-repeat;
+	background-position: 50% 100%;
+	cursor: pointer;
+}
+
+/* TOOLTIPS */
+
+.tooltip{
+	position: relative;
+	font-size: 11px;
+	border: 1px solid #d9d9d9 !important;
+	background-color: #f1f1f1 !important;
+	max-width: 200px;
+	padding: 7px 4px;
+	height: auto;
+	top: 28px;
+	left: 260px;
+	display: none;
+	color: #4d4d4d;
+}
+
+.tooltipArrow{
+	height: 12px;
+	width: 8px;
+	position: absolute;
+	top: 32px;
+	left: 468px;
+	background: url(../images/arrow_left.png) no-repeat;	
+	display: none;
+}
+
+.tooltipErrorType{
+	background-image: url(../images/alert_icon.png);
+	background-repeat: no-repeat;
+	background-position: 4% 50%;
+	padding-left: 25px;
+	
+}
+
+/* TABS */
+
+.tabItem{
+	position: absolute;
+	top: -36px;
+	left: 0px;
+	background-color: #e5e5e5;
+	padding: 11px 17px 9px 17px;
+	border-bottom: 0;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	-khtml-border-top-left-radius: 4px;
+	-khtml-border-top-right-radius: 4px;
+	font-size: 14px;
+	color: #808080;
+	cursor: pointer;
+}
+
+.activeTab{
+	background: #4285f4;
+	background: -webkit-linear-gradient(top,#4387fd,#4683ea);
+	background: linear-gradient(top,#4387fd,#4683ea);
+	color: #fff;
+}
+
+#importTab{
+	
+}
+
+#exportTab{
+	left: 100px;
+}
+
+/* MAIN CONTAINER */
+
+#mainContainer{
+	width: 500px;
+	border: 1px solid transparent;
+	border-right: 1px solid #e5e5e5;
+	margin: 0 auto;
+	position: relative;
+	top: 125px;
+	background-color: #f5f5f5;
+	box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+}
+
+#mainContainer_import, #mainContainer_export {
+	padding: 20px 20px 40px 20px;
+}
+
+#mainContainer_export{
+	display: none;
+}
+
+.sectionHeader{
+	font-size: 25px;
+	font-weight: normal;
+	margin: 5px 0 10px 0;
+}
+
+/*INPUT CONTAINERS*/
+
+.inputClass{
+	height: 27px;
+	width: 410px;
+	padding-right: 40px;
+	margin: 0 0 15px 0;
+	float: left;
+	border: 1px solid #A8A8A8;
+	padding-left: 7px;
+	font-size: 16px;
+}
+
+.inputError, .inputSuccess{
+	background: url(../images/fail.png) #fff no-repeat 99% 55%;
+}
+
+.inputSuccess{
+	background: url(../images/success.png) #fff no-repeat 99% 55%;
+	
+}
+
+.inputLabel{
+	width: 215px;
+	float: left;
+	margin: 6px 0 2px 0;
+	font-size: 13px;
+	color: #5E5E5E;
+}
+
+.mandatoryInput{
+	position: relative;
+	top: 3px;
+	color: #d73d32;	
+}
+
+
+.inputHalfSize{
+	width: 50%;
+}
+
+/* BUTTON */
+
+
+.button{
+	padding: 8px 30px 7px 12px;;
+	background-color: #53a93f;
+	color: #fff;
+	width: 120px;
+	font-size: 15px;
+	margin-right: 0px;
+	margin-bottom: 15px;
+}
+
+.uploadButtonUpload{
+	background-image: url(../images/upload.png);
+	background-repeat: no-repeat;
+	background-position: 97% 50%;
+	background-color: #53a93f;
+	cursor: pointer;	
+}
+
+.uploadButtonLoading{
+	background-image: url(../images/loading.gif);
+	background-repeat: no-repeat;
+	background-position: 90% 50%;
+	background-color: #53a93f;
+	cursor: default;
+}
+
+.uploadButtonSuccess{
+	background-image: url(../images/success_white.png);
+	background-repeat: no-repeat;
+	background-position: 90% 50%;
+	background-color: #53a93f;
+	cursor: default;
+}
+
+.uploadButtonFail{
+	background-image: url(../images/fail_white.png);
+	background-repeat: no-repeat;
+	background-position: 93% 52%;
+	cursor: default;
+	background-color: #E04848;
+}
+
+.uploadButtonTryagain{
+	background-image: url(../images/tryagain.png);
+	background-repeat: no-repeat;
+	background-position: 93% 52%;
+	cursor: pointer;
+	background-color: #4894E0;
+}
+
+.button_disabled{
+	background-color: #5E5E5E !important;
+	opacity: 0.5;
+	cursor: default;
+}
+
+/*EXPORT BUTTON*/
+
+#exportButton{
+	font-size: 16px;
+	width: 90%;
+	margin: 0px auto 0 auto;
+	cursor: pointer;
+}
+
+#exportButton:hover{
+	background-color: #61B84D;
+}
+
+.exportButtonClass{
+	
+}
+
+.exportLabel{
+	margin: 20px 0 5px 0;
+	font-size: 13px;
+	color: #5E5E5E;
+}
+
+#exportButton span{
+	width: 235px;
+	position: relative;
+	left: 50%;
+	margin: 0 0 0 -95px;
+}
+
+/* LINK CONTAINER */
+
+#linkContainer{
+	width: 300px;
+	position: absolute;
+	right: 0;
+	top: -20px;
+}
+
+.linkItem{
+	float: right;
+	width: 120px;
+	text-align: right;	
+	background: url(../images/linkIcon.png) 100% 50% no-repeat;
+	padding-right: 20px;
+}
+
+
+.linkItem a{
+	font-size: 12px;
+	color: #3295BF;	
+	text-decoration: none;
+	opacity: 0.8
+}
+
+
+.linkItem a:hover{
+	-webkit-transition: opacity .4s linear;
+	transition: opacity .4s linear;
+	opacity: 1;
+}
+
+/* SHOW MORE */
+
+#showAlterView{
+	position: relative;
+	top: -10px;
+	left: 39%;
+	font-size: 12px;
+	color: #4d4d4d;
+}
+
+#showAlterView img{
+	position: relative;
+	top: 2px;
+	left: 7px;
+	
+}
+
+
+/* MEDIA QUERIES*/
+
+@media (max-width: 980px) {
+	.error{
+	height: auto;
+}	
+	
+	#mainContainer{
+	
+	}
+	
+}
+
+@media (max-width: 850px) {
+	
+/* TOOLTIPS */
+
+.tooltip{
+	position: absolute;
+	top: -10px;
+	left: 295px;
+}
+
+.tooltipArrow{
+	top: 13px;
+	left: 368px;
+	background: url(../images/arrow_bottom.png) 50% 50% no-repeat;
+}
+	
+}

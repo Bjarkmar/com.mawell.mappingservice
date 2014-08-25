@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://mapid.mawell.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MapId" targetNamespace="http://mapid.mawell.com/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://mapid.mawell.com/">
+      <xsd:element name="getFields">
+        <xsd:complexType>
+          <xsd:sequence>
+          	<xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+          	<xsd:element name="idType" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="input" type="tns:searchFields" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="searchFields">
+      	<xsd:sequence>
+            <xsd:element name="header" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:string"/>
+          </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getFieldsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="fieldSet" type="tns:fieldSet" minOccurs="1" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+	  <xsd:complexType name="fieldSet">
+		<xsd:sequence>
+			<xsd:element name="fieldName" type="xsd:string"/>
+			<xsd:element name="value" type="xsd:string"/>
+		</xsd:sequence>
+   	  </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getFieldsRequest">
+    <wsdl:part element="tns:getFields" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getFieldsResponse">
+    <wsdl:part element="tns:getFieldsResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="MapId">
+    <wsdl:operation name="getFields">
+      <wsdl:input message="tns:getFieldsRequest"/>
+      <wsdl:output message="tns:getFieldsResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MapIdSOAP" type="tns:MapId">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getFields">
+      <soap:operation soapAction="http://mapid.mawell.com/MapId/getFields"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MapId">
+    <wsdl:port binding="tns:MapIdSOAP" name="MapIdSOAP">
+      <soap:address location="http://localhost:8080/com.mawell.mappingservice/services/MapIdSOAP"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
