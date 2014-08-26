@@ -64,10 +64,10 @@ public class DbNotifications {
 	}
 
 
-	public void setValues(String id, String idType, String name, boolean sent) throws SQLException {
+	public void setValues(String id, String idType, String name, boolean sent, String eMail) throws SQLException {
 		
-		String sqlQuery = "INSERT INTO NotificationTable(id , id_type, time, sent, name ) "
-				+ "VALUES(?, ?, now(), ?, ?);";//TODO get Table name from config?
+		String sqlQuery = "INSERT INTO NotificationTable(id , id_type, time, sent, name, notification_receiver) "
+				+ "VALUES(?, ?, now(), ?, ?, ?);";//TODO get Table name from config?
 		
 		try {
 			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
@@ -77,6 +77,7 @@ public class DbNotifications {
 			query.setString(2, idType);
 			query.setBoolean(3, sent);
 			query.setString(4, name);
+			query.setString(5, eMail);
 			//Execute query
 			query.executeUpdate();
 			conn.close();

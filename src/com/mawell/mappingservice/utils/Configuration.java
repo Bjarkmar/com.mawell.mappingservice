@@ -63,7 +63,10 @@ public class Configuration {
 		logFileName = date.toString();
 		return logFileName;
 	}
-	
+	/**
+	 * Returns the path to the graphical web interface without the index.html extention but with a / at the end.
+	 * @return String the web address.
+	 */
 	public String getWebAddress(){
 		return rootSource+link;
 	}

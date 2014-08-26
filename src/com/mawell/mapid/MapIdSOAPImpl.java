@@ -90,8 +90,8 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     			response= new FieldSet[0];//If error is no match in DB send empty response.
     		}
     		System.out.println("There was an error: " + errorCode);
-		//	Notification notification = new Notification(id, idType, displayName);
-		//	notification.sendNotification();
+			Notification notification = new Notification(id, idType, displayName);
+			notification.sendNotification();
     	}
         return response;
     }

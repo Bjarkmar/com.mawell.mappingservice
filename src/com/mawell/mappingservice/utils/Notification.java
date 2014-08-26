@@ -32,45 +32,56 @@ public class Notification {
 	 * This method sends a notifiaction according to rules set up in configuration.
 	 */
 	public void sendNotification(){
-		Date currentDate = new Date();
-		boolean flag = false;
-		//Timestamp currentTime = new Timestamp();
-		//Get conditions for when to send a notification.
-		int[] prefs = config.getPrefForNotification();
-		//Get previous notifications.
 		DbNotifications notifications = new DbNotifications();
+		String eMail = config.getNotificationAddress(idType);
 		try {
-			ResultSet rs = notifications.getPreviousNotifications(prefs[0]);
-			if (rs.next() == true){
-				rs.last();
-				if (rs.getRow()<prefs[1]+2){
-					//Less than maximum number of sent notifications.
-					while (rs.previous()){
-						Timestamp ts = rs.getTimestamp("time");
-						//Compare time to current notification.
-						if (ts.compareTo(currentDate) <500) flag = true; //If too short time since last notif.
-					}
-					
-				}
-				else{
-					//If maximum number of sent massages is reached.
-					flag = true;
-				}
-			}
-
-			if (flag == false) {
-				//Build E-mail message
-				String sendMessage = "No matching for id: "+id+" and id type: "+idType +".";
-				sendMessage = sendMessage + "\r" + config.getWebAddress() + "index.html?name=" + displayName + "&id="+ id +"&id_type="+idType;
-				//Send message.
-				sendEmail(sendMessage, config.getNotificationAddress(""));
-			}
-			notifications.setValues(id, idType, name, !flag);
-		} catch (SQLException se){
-//TODO proper error handling.
+			notifications.setValues(id, idType, displayName, true, eMail);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		
+		
+//		Date currentDate = new Date();
+//		boolean flag = false;
+//		//Timestamp currentTime = new Timestamp();
+//		//Get conditions for when to send a notification.
+//		int[] prefs = config.getPrefForNotification();
+//		//Get previous notifications.
+//		DbNotifications notifications = new DbNotifications();
+//		try {
+//			ResultSet rs = notifications.getPreviousNotifications(prefs[0]);
+//			if (rs.next() == true){
+//				rs.last();
+//				if (rs.getRow()<prefs[1]+2){
+//					//Less than maximum number of sent notifications.
+//					while (rs.previous()){
+//						Timestamp ts = rs.getTimestamp("time");
+//						//Compare time to current notification.
+//						if (ts.compareTo(currentDate) <500) flag = true; //If too short time since last notif.
+//					}
+//					
+//				}
+//				else{
+//					//If maximum number of sent massages is reached.
+//					flag = true;
+//				}
+//			}
+//
+//			if (flag == false) {
+//				//Build E-mail message
+//				String sendMessage = "No matching for id: "+id+" and id type: "+idType +".";
+//				sendMessage = sendMessage + "\r" + config.getWebAddress() + "index.html?name=" + displayName + "&id="+ id +"&id_type="+idType;
+//				//Send message.
+//				sendEmail(sendMessage, config.getNotificationAddress(""));
+//			}
+//			notifications.setValues(id, idType, name, !flag);
+//		} catch (SQLException se){
+////TODO proper error handling.
+//		}
+//		
+//		
 	}
 	
 	
