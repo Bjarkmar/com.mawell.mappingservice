@@ -95,6 +95,46 @@ public class DbNotifications {
 	}
 	
 	/**
+	 * The method checks if there is a record in the notification table that matches the input criteria.
+	 * @param id String 
+	 * @param idType String
+	 * @return true if a matching id and id-type is already in queue to be notified. Otherwise false.
+	 */
+	public boolean checkNotification(String id, String idType){
+		ResultSet res = null;
+		//Get results from database.
+		String queryString = "SELECT COUNT(*) FROM NotificationTable WHERE id = ? and id_type = ?";
+		int number=1;
+		try{
+			conn = DbConnection.MappingDbConn().getConnection();
+			query=conn.prepareStatement(queryString);
+			query.setString(1, id);
+			query.setString(2, idType);
+			res = query.executeQuery();
+			while (res.next()){
+				number = res.getInt(1);
+			} 
+			conn.close();
+		}
+		catch (SQLException se){
+			se.printStackTrace();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			//if(conn != null) conn.close();
+		}
+		if (number < 1){
+			return true;
+		} else {
+			return false;
+		}
+		
+	}	
+	
+	
+	/**
 	 * This method returns the headers that is used in the DB table.
 	 * The values should come from a config file.
 	 * @return

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
@@ -25,7 +26,7 @@ public class ScheduledTask {
     }
 	
 	//@SuppressWarnings("unused")
-	@Schedule(second="0", minute="25", hour="15", dayOfWeek="Mon-Fri",
+	@Schedule(second="0", minute="57", hour="9", dayOfWeek="Mon-Fri",
       dayOfMonth="*", month="*", year="*", info="MyTimer")
     private void scheduledTimeout(final Timer t) {
         System.out.println("@Schedule called at: " + new java.util.Date());
@@ -56,14 +57,19 @@ public class ScheduledTask {
         					+ "name="+res.getString("name")+"&id="+res.getString("id")+"&id_type=" 
         					+ res.getString("id_type") + "'>Lägg till mappning</a> </td></tr>";
         		}
+        		//Send notification mail...
         		mailContent += "</table>";
         		Mail eMail = new Mail();
         		eMail.SendMail(mailContent, "andreas.bjarkmar@mawell.com");
         		System.out.println(mailContent);
+            	Statement deleteStatement = conn.createStatement(); 
+        		deleteStatement.executeUpdate("DELETE FROM notificationtable WHERE notification_receiver ="
+        				+ " 'andreas.bjarkmar@mawell.com'");//Change to ...List[i]vvv
         	}
 			if(conn!= null) conn.close();
         }
         catch(SQLException se){
+        	System.out.println("Error in sql while trying to send stored notifications.");
         	//TODO Error handling
         }
         catch(Exception e){

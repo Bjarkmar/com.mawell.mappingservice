@@ -33,15 +33,17 @@ public class Notification {
 	 */
 	public void sendNotification(){
 		DbNotifications notifications = new DbNotifications();
+		//if (notifications.checkNotification(id, idType)) return;
 		String eMail = config.getNotificationAddress(idType);
 		try {
 			notifications.setValues(id, idType, displayName, true, eMail);
+			System.out.println("Du är här!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		
 		}
-		
-		
+	}	
 		
 //		Date currentDate = new Date();
 //		boolean flag = false;
@@ -82,7 +84,7 @@ public class Notification {
 //		}
 //		
 //		
-	}
+//	}
 	
 	
 	/**
