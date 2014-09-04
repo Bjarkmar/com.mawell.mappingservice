@@ -37,7 +37,7 @@ public class Notification {
 		String eMail = config.getNotificationAddress(idType);
 		try {
 			notifications.setValues(id, idType, displayName, true, eMail);
-			System.out.println("Du är här!");
+			//System.out.println("Du är här!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

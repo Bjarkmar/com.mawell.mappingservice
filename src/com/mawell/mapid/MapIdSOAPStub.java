@@ -6,9 +6,9 @@
  */
 
 package com.mawell.mapid;
-
+@SuppressWarnings("rawtypes")
 public class MapIdSOAPStub extends org.apache.axis.client.Stub implements com.mawell.mapid.MapId_PortType {
-    private java.util.Vector cachedSerClasses = new java.util.Vector();
+	private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
     private java.util.Vector cachedDeserFactories = new java.util.Vector();
@@ -50,7 +50,8 @@ public class MapIdSOAPStub extends org.apache.axis.client.Stub implements com.ma
          super.cachedEndpoint = endpointURL;
     }
 
-    public MapIdSOAPStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
+    @SuppressWarnings({ "unused", "unchecked" })
+	public MapIdSOAPStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
         if (service == null) {
             super.service = new org.apache.axis.client.Service();
         } else {

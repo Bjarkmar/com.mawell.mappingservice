@@ -7,9 +7,14 @@
 
 package com.mawell.mapid;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class MapIdSOAPSkeleton implements com.mawell.mapid.MapId_PortType, org.apache.axis.wsdl.Skeleton {
-    private com.mawell.mapid.MapId_PortType impl;
-    private static java.util.Map _myOperations = new java.util.Hashtable();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private com.mawell.mapid.MapId_PortType impl;
+	private static java.util.Map _myOperations = new java.util.Hashtable();
     private static java.util.Collection _myOperationsList = new java.util.ArrayList();
 
     /**
@@ -28,7 +33,7 @@ public class MapIdSOAPSkeleton implements com.mawell.mapid.MapId_PortType, org.a
 
     static {
         org.apache.axis.description.OperationDesc _oper;
-        org.apache.axis.description.FaultDesc _fault;
+        //org.apache.axis.description.FaultDesc _fault;
         org.apache.axis.description.ParameterDesc [] _params;
         _params = new org.apache.axis.description.ParameterDesc [] {
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false), 

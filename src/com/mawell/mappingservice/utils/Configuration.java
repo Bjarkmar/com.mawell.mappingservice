@@ -11,7 +11,7 @@ public class Configuration {
 	String logFileRoot = "C:/temp/";
 	String logFileName = "MappingServiceLog.txt";
 	String exportFileRoot = "C:/temp/";
-	String rootSource = "http://localhost:8080/";
+	String rootSource = "http://172.16.40.29:8080/";
 	String link = "com.mawell.mappingservice/";
 	String notificationTableName = "ConfigTable";
 	int noOfDays = 1;

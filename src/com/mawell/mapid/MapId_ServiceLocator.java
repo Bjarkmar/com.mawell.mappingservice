@@ -9,7 +9,12 @@ package com.mawell.mapid;
 
 public class MapId_ServiceLocator extends org.apache.axis.client.Service implements com.mawell.mapid.MapId_Service {
 
-    public MapId_ServiceLocator() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public MapId_ServiceLocator() {
     }
 
 
@@ -70,7 +75,8 @@ public class MapId_ServiceLocator extends org.apache.axis.client.Service impleme
      * If this service has no port for the given interface,
      * then ServiceException is thrown.
      */
-    public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
+    @SuppressWarnings("rawtypes")
+	public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         try {
             if (com.mawell.mapid.MapId_PortType.class.isAssignableFrom(serviceEndpointInterface)) {
                 com.mawell.mapid.MapIdSOAPStub _stub = new com.mawell.mapid.MapIdSOAPStub(new java.net.URL(MapIdSOAP_address), this);
@@ -89,7 +95,8 @@ public class MapId_ServiceLocator extends org.apache.axis.client.Service impleme
      * If this service has no port for the given interface,
      * then ServiceException is thrown.
      */
-    public java.rmi.Remote getPort(javax.xml.namespace.QName portName, Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
+    @SuppressWarnings("rawtypes")
+	public java.rmi.Remote getPort(javax.xml.namespace.QName portName, Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         if (portName == null) {
             return getPort(serviceEndpointInterface);
         }
@@ -108,9 +115,11 @@ public class MapId_ServiceLocator extends org.apache.axis.client.Service impleme
         return new javax.xml.namespace.QName("http://mapid.mawell.com/", "MapId");
     }
 
-    private java.util.HashSet ports = null;
+    @SuppressWarnings("rawtypes")
+	private java.util.HashSet ports = null;
 
-    public java.util.Iterator getPorts() {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public java.util.Iterator getPorts() {
         if (ports == null) {
             ports = new java.util.HashSet();
             ports.add(new javax.xml.namespace.QName("http://mapid.mawell.com/", "MapIdSOAP"));

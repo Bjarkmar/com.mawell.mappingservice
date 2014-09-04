@@ -500,7 +500,7 @@ window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari
 function exportData(){
 
     $.ajax({
-    	url: "http://localhost:8080/com.mawell.mappingservice/Exporter/",
+    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/Exporter/",
         cache: true,
        type: "POST",
        contentType: "application/json; charset=UTF-8",

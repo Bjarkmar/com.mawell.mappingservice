@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mawell.doa.DbConnection;
+
 import com.mawell.mappingservice.utils.Configuration;
 
 /**
@@ -27,6 +28,7 @@ public class DbGetMapping {
 	String int_id;
 	public DbGetMapping(){
 		try {
+			@SuppressWarnings("unused")
 			Connection conn = DbConnection.MappingDbConn().getConnection(); 
 		} catch (Exception se){
 			//TODO handle error.
