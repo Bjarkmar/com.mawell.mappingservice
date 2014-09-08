@@ -84,7 +84,7 @@ public class MapIdSOAPStub extends org.apache.axis.client.Stub implements com.ma
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
-
+            System.out.println("First call is made...");
     }
 
     protected org.apache.axis.client.Call createCall() throws java.rmi.RemoteException {

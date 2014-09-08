@@ -36,8 +36,9 @@ public class Notification {
 		//if (notifications.checkNotification(id, idType)) return;
 		String eMail = config.getNotificationAddress(idType);
 		try {
-			notifications.setValues(id, idType, displayName, true, eMail);
-			//System.out.println("Du är här!");
+			if (notifications.checkNotification(id, idType) != false){
+				notifications.setValues(id, idType, displayName, true, eMail);
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

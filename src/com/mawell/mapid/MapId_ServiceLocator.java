@@ -131,7 +131,6 @@ public class MapId_ServiceLocator extends org.apache.axis.client.Service impleme
     * Set the endpoint address for the specified port name.
     */
     public void setEndpointAddress(java.lang.String portName, java.lang.String address) throws javax.xml.rpc.ServiceException {
-        
 if ("MapIdSOAP".equals(portName)) {
             setMapIdSOAPEndpointAddress(address);
         }

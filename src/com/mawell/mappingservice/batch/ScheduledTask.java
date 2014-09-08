@@ -26,7 +26,7 @@ public class ScheduledTask {
     }
 	
 	//@SuppressWarnings("unused")
-	@Schedule(second="0", minute="57", hour="9", dayOfWeek="Mon-Fri",
+	@Schedule(second="0", minute="07", hour="11", dayOfWeek="Mon-Fri",
       dayOfMonth="*", month="*", year="*", info="MyTimer")
     private void scheduledTimeout(final Timer t) {
         System.out.println("@Schedule called at: " + new java.util.Date());
@@ -43,12 +43,15 @@ public class ScheduledTask {
         	Connection conn = DbConnection.MappingDbConn().getConnection(); 
         	PreparedStatement query = conn.prepareStatement(queryString); //SQL query
         	//Start to write notifications into a table.
+        	
         	for(int i = 0 ; i<addressList.length ; i++){
+        		boolean test = false;
         		String mailContent = config.getNotifiactionMessage();
         		mailContent += "<table border='0'>";
         		query.setString(1, addressList[i].toUpperCase());//Change to ...List[i]
         		ResultSet res = query.executeQuery();
         		while(res.next()){
+        			test = true;
         			mailContent += "<tr><td> " + res.getString("name") + " </td>"; //First column
             		mailContent += "<td> "+res.getString("id")+" </td>"; //Second column
             		mailContent += "<td> "+res.getString("id_type")+" </td>"; //Third column
@@ -59,12 +62,16 @@ public class ScheduledTask {
         		}
         		//Send notification mail...
         		mailContent += "</table>";
-        		Mail eMail = new Mail();
-        		eMail.SendMail(mailContent, "andreas.bjarkmar@mawell.com");
-        		System.out.println(mailContent);
-            	Statement deleteStatement = conn.createStatement(); 
-        		deleteStatement.executeUpdate("DELETE FROM notificationtable WHERE notification_receiver ="
-        				+ " 'andreas.bjarkmar@mawell.com'");//Change to ...List[i]vvv
+        		System.out.println(test);
+        		if (test == true){
+        			Mail eMail = new Mail();
+        			eMail.SendMail(mailContent, "andreas.bjarkmar@mawell.com");
+        			System.out.println(mailContent);
+        			Statement deleteStatement = conn.createStatement(); 
+        			deleteStatement.executeUpdate("DELETE FROM notificationtable WHERE notification_receiver ="
+        					+ " 'andreas.bjarkmar@mawell.com'");//Change to ...List[i]vvv
+        		}
+        		
         	}
 			if(conn!= null) conn.close();
         }

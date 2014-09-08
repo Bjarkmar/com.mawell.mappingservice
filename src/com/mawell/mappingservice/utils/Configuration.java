@@ -1,9 +1,9 @@
 package com.mawell.mappingservice.utils;
 
 import java.util.Date;
+import com.mawell.mappingservice.batch.ConfigurationTest;
 public class Configuration {
 	public Configuration(){
-		
 	}
 	//Configurations
 	String tableName = "MappingTable";
