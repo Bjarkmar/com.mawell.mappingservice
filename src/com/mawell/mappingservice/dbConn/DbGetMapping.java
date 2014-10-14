@@ -127,7 +127,7 @@ public class DbGetMapping {
 		}
 		catch (Exception e){
 			e.printStackTrace();
-			errorCode = errorCode + "520";
+			errorCode = errorCode + "520"; //An unknown database error occurred
 			returnString = null; //TODO Proper error handling.	
 		}
 		finally{

@@ -369,7 +369,7 @@ setTimeout(function(){
 	
 	
     $.ajax({
-    	url: "http://localhost:8080/com.mawell.mappingservice/InsertEntry/?" + urlParams,
+    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/InsertEntry/?" + urlParams, //mapper1.bfr.vgregion.se
         async: false,
         cache: true,
        type: "GET",
@@ -500,7 +500,7 @@ window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari
 function exportData(){
 
     $.ajax({
-    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/Exporter/",
+    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/Exporter/",//TODO mapper1.bfr.vgregion.se
         cache: true,
        type: "POST",
        contentType: "application/json; charset=UTF-8",

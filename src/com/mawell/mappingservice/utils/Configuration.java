@@ -1,22 +1,43 @@
 package com.mawell.mappingservice.utils;
 
 import java.util.Date;
-import com.mawell.mappingservice.batch.ConfigurationTest;
+
+//import com.mawell.mappingservice.batch.ConfigurationTest;
 public class Configuration {
 	public Configuration(){
 	}
-	//Configurations
+	//Configurations test
 	String tableName = "MappingTable";
 	String notificationAddress = "andreas.bjarkmar@mawell.com";
 	String logFileRoot = "C:/temp/";
 	String logFileName = "MappingServiceLog.txt";
-	String exportFileRoot = "C:/temp/";
 	String rootSource = "http://172.16.40.29:8080/";
 	String link = "com.mawell.mappingservice/";
 	String notificationTableName = "ConfigTable";
 	int noOfDays = 1;
+	
+	String exportFileExtention = "/files/dbexport.csv";
+
+	String notificationTime = "10:20"; //On the format hh:mm
+	//String path = request.getServletContext().getRealPath("") + "/files/dbexport.csv";
+	
+	//Configurations customer test
+	
+//	String tableName = "MappingTable";
+//	String notificationAddress = "andreas.bjarkmar@mawell.com";
+//	String logFileRoot = "C:/temp/";
+//	String logFileName = "MappingServiceLog.txt";
+//	String exportFileRoot = "C:/temp/";
+//	String rootSource = "http://mapper1.bfr.vgregion.se:8080/";
+//	String link = "com.mawell.mappingservice/";
+//	String notificationTableName = "ConfigTable";
+//	int noOfDays = 1;
+	
+	
+	//Not used in current set up.
 	int maxMailPerUnit = 5; //The maximum number of mails to be sent during the specified time above.
-	int minTimeBetweenTwoEmails = 10; //A notification is not sent if last is sent within the previous n seconds.
+	int minTimeBetweenTwoEmails = 10;//A notification is not sent if last is sent within the previous n seconds.
+	
 	
 	/**
 	 * Return table name.
@@ -72,7 +93,11 @@ public class Configuration {
 	}
 	
 	public String getExportFile(){
-		return exportFileRoot + "export.csv";
+		return exportFileExtention;
+	}
+	
+	public String getNotificationTime(){
+		return notificationTime;
 	}
 	
 	/**

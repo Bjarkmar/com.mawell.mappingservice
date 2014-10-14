@@ -24,15 +24,16 @@ public class ScheduledTask {
     public ScheduledTask() {
         System.out.println("Scheduled task initiated");// TODO Auto-generated constructor stub
     }
-	
+	Configuration config = new Configuration();
+	//String[] timeParts = config.getNotificationTime().split(":");
 	//@SuppressWarnings("unused")
-	@Schedule(second="0", minute="07", hour="11", dayOfWeek="Mon-Fri",
+	@Schedule(second="0", minute="32", hour="10", dayOfWeek="Mon-Fri",
       dayOfMonth="*", month="*", year="*", info="MyTimer")
     private void scheduledTimeout(final Timer t) {
         System.out.println("@Schedule called at: " + new java.util.Date());
         
         //Get e-mail addresses to be notified.
-        Configuration config = new Configuration();
+        
         String[] addressList = new String[2];
         addressList[0]= config.getNotificationAddress(); //This should be changed to String[]
         addressList[1]= config.getNotificationAddress();

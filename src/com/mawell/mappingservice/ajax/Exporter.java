@@ -40,9 +40,9 @@ public class Exporter extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//String path = "C:/Workspace/Eclipse/glassfish4/glassfish4/glassfish/domains/domain1/eclipseApps/com.mawell.mappingservice/files/dbexport.csv";
-		String path = request.getServletContext().getRealPath("") + "/files/dbexport.csv";
-		System.out.println(path);
+		Configuration config = new Configuration();
+	    String path = request.getServletContext().getRealPath("") + "\\files\\dbexport.csv"; //TODO This should come from config file or similar.
+	    System.out.println(path);
 		String dbcontent = getDatabaseContent();
 		PrintWriter writer = new PrintWriter(path, "UTF-8");
 		writer.println(dbcontent);
@@ -61,10 +61,10 @@ public class Exporter extends HttpServlet {
 	        response.setHeader("Access-Control-Allow-Methods", "POST");
 	        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 	        response.setHeader("Access-Control-Max-Age", "86400");
-	        Configuration config = new Configuration();
-	        path = config.getWebAddress()+"/files/dbexport.csv";//TODO get from config file
+	       
 	        try {
-	        	response.getWriter().write(path);
+	        	response.getWriter().write(config.getWebAddress()+"/files/dbexport.csv");//TODO change this accordingly.
+	        	System.out.println("Sending path to servlet: "+path);
 	        }
 	        catch(Exception e){
 	        	e.printStackTrace();

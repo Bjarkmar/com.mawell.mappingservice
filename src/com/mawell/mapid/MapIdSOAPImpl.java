@@ -48,12 +48,10 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     				response = new FieldSet[Mapper.getHeaders().length]; //Create an array of proper length.
     				//Parse results into response
     				for(int i=0;i<UnknownResult[0].length;i++){
-    					response[i]=new FieldSet(columns[i],UnknownResult[0][i]);//Columns is not correct since what is returned is not the same.
+    					response[i]=new FieldSet(columns[i],UnknownResult[0][i].toString());//Columns is not correct since what is returned is not the same.
     				}
+    				System.out.println("The following HSA-id was sent to requesting system: " + UnknownResult[0][1]);// Remove. only for debug purposes.
     				
-    			response = new FieldSet[1];	
-    			response[0] = new FieldSet("hsaid", "SE00TEST");//TODO For testing. to be removed.
-    				System.out.println("The following HSA-id was sent to requesting system: ");//TODO for test remove to here--> + UnknownResult[0][1]);//TODO Remove. only for debug purposes.
     				
     			}
     			else{
@@ -63,10 +61,11 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     			
     		}
     		catch (SQLException se){
+    			errorCode="520";//Lost connection with database
     			se.printStackTrace();
     		}
     		catch (Exception e){
-    			errorCode="520"; //Unknown DB error TODO I get here if sending in unmatched Strings
+    			errorCode="520"; //Unknown error TODO I get here if sending in unmatched Strings
     			e.printStackTrace();	
     		}
     		finally {
@@ -77,7 +76,7 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
 					catch(SQLException e){}
 				}
     		}
-
+    		//return response;
     	}
     	else{
 			errorCode="512"; //No id or id type was entered.
@@ -86,10 +85,11 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     		if (errorCode!="510"){
     			response = new FieldSet[1];
     			response[0]=new FieldSet("error",errorCode);
+    			System.out.println("There was an error: " + errorCode);
     		}else{
+    			System.out.println("No mapping for id"+ id + " and id type " + idType);
     			response= new FieldSet[0];//If error is no match in DB send empty response.
     		}
-    		System.out.println("There was an error: " + errorCode);
 			Notification notification = new Notification(id, idType, displayName);
 			notification.sendNotification();
     	}
