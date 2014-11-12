@@ -2,6 +2,7 @@
     <wb-module deploy-name="com.mawell.mappingservice">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/DbImport"/>
         <property name="context-root" value="com.mawell.mappingservice"/>
         <property name="java-output-path" value="/com.mawell.mappingservice/build/classes"/>
     </wb-module>

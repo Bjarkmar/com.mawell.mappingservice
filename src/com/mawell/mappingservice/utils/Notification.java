@@ -1,7 +1,11 @@
 package com.mawell.mappingservice.utils;
 
+import com.mawell.mapid.MapIdSOAPImpl;
 import com.mawell.mappingservice.utils.Configuration;
 import com.mawell.mappingservice.dbConn.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.io.*;
@@ -11,26 +15,28 @@ public class Notification {
 	String id;
 	String idType;
 	String displayName;
-	Configuration config;
+	Configuration config = new Configuration();
 	String name = "";
+	final Logger logger = LogManager.getLogger(Notification.class.getName());
+	
 	public Notification (String s_id, String s_idType, String s_displayName) {
 		id = s_id;
 		idType = s_idType;
 		displayName = s_displayName;
-		config = new Configuration();
 	}
 	public Notification (Configuration in_config){
 		id=null;
 		idType=null;
 		config = in_config;
 	}
-	String defaultAddress = "andreas.bjarkmar@mawell.com";//TODO config.getNotificationAddress("");
+	String defaultAddress = config.getNotificationAddress();
 	
 	
 	
 	/**
 	 * This method sends a notifiaction according to rules set up in configuration.
 	 */
+	
 	public void sendNotification(){
 		DbNotifications notifications = new DbNotifications();
 		//if (notifications.checkNotification(id, idType)) return;
@@ -40,61 +46,21 @@ public class Notification {
 				notifications.setValues(id, idType, displayName, true, eMail);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Auto-generated catch block
+			logger.error("Could not connect with notification databese");
+
 		
 		}
 	}	
 		
-//		Date currentDate = new Date();
-//		boolean flag = false;
-//		//Timestamp currentTime = new Timestamp();
-//		//Get conditions for when to send a notification.
-//		int[] prefs = config.getPrefForNotification();
-//		//Get previous notifications.
-//		DbNotifications notifications = new DbNotifications();
-//		try {
-//			ResultSet rs = notifications.getPreviousNotifications(prefs[0]);
-//			if (rs.next() == true){
-//				rs.last();
-//				if (rs.getRow()<prefs[1]+2){
-//					//Less than maximum number of sent notifications.
-//					while (rs.previous()){
-//						Timestamp ts = rs.getTimestamp("time");
-//						//Compare time to current notification.
-//						if (ts.compareTo(currentDate) <500) flag = true; //If too short time since last notif.
-//					}
-//					
-//				}
-//				else{
-//					//If maximum number of sent massages is reached.
-//					flag = true;
-//				}
-//			}
-//
-//			if (flag == false) {
-//				//Build E-mail message
-//				String sendMessage = "No matching for id: "+id+" and id type: "+idType +".";
-//				sendMessage = sendMessage + "\r" + config.getWebAddress() + "index.html?name=" + displayName + "&id="+ id +"&id_type="+idType;
-//				//Send message.
-//				sendEmail(sendMessage, config.getNotificationAddress(""));
-//			}
-//			notifications.setValues(id, idType, name, !flag);
-//		} catch (SQLException se){
-////TODO proper error handling.
-//		}
-//		
-//		
-//	}
-	
-	
 	/**
-	 * This method sends a notifiaction to a specified address.
+	 * This method sends a notification to a specified address.
 	 * @param emailAddress
-	 */
+	 *
 	public void sendNotificationTo(String emailAddress){
-		//TODO Stub
+		
 	}
+	*/
 	
 	
 	
@@ -113,8 +79,8 @@ public class Notification {
 	 * @param message
 	 * @param code
 	 */
-	//TODO Is this method called from outside or can it be made private?
-	public void writeLog(String message, int code){
+
+	private void writeLog(String message, int code){
 		//Create string to write to file.
 		Date datum = new Date();
 		String line=datum.toString()+" | " + code + " | " + message;
@@ -149,8 +115,7 @@ public class Notification {
 			sender.SendMail(message, toAddress);
 		}
 		catch (Exception e) {
-			writeLog("E-mail could not be sent.", 530);//TODO Perhaps this should come from config.
-			//TODO do something here logging+notification
+			logger.error("The e-mail notification cannot be sent.");
 		}
 	}	
 }

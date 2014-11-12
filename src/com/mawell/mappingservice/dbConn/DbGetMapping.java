@@ -7,7 +7,11 @@ import java.sql.SQLException;
 
 import org.mawell.doa.DbConnection;
 
+import com.mawell.mapid.MapIdSOAPImpl;
 import com.mawell.mappingservice.utils.Configuration;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 
@@ -23,15 +27,17 @@ public class DbGetMapping {
 	String[][] returnString = null;
 	String errorCode = null;
 	Connection conn;
-	//temp:
+	Configuration config;
 	String hsaid;
 	String int_id;
+	final Logger logger = LogManager.getLogger(DbGetMapping.class.getName());
 	public DbGetMapping(){
 		try {
 			@SuppressWarnings("unused")
 			Connection conn = DbConnection.MappingDbConn().getConnection(); 
 		} catch (Exception se){
-			//TODO handle error.
+			logger.error("Connection to database could not be established.");
+
 		}
 	}
 	public DbGetMapping(Connection openConnection){
@@ -52,10 +58,10 @@ public class DbGetMapping {
 			res = query.executeQuery();
 		}
 		catch (SQLException se){
-			se.printStackTrace();
+			logger.error("Could not get mappings from database.");
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("An error occured while connectiong to database.");
 		}
 		finally{
 			//if (res != null) res.close();
@@ -121,14 +127,14 @@ public class DbGetMapping {
 		catch (SQLException se)
 		{
 			errorCode = "521"; // Database exception
-			se.printStackTrace();
+			logger.error("Connection to database could not be established.");
 			returnString = null;
 			throw se;
 		}
 		catch (Exception e){
-			e.printStackTrace();
 			errorCode = errorCode + "520"; //An unknown database error occurred
-			returnString = null; //TODO Proper error handling.	
+			logger.error("An error occured when trying to get mappings from database.");
+			returnString = null; 
 		}
 		finally{
 			//if (conn != null) conn.close(); //Close connection.
@@ -141,7 +147,8 @@ public class DbGetMapping {
 	 * @return
 	 */
 	public String[] getHeaders(){
-		String[] headers = {"id","hsaid","id_type","added", "name"}; //TODO get from config file.
+		String[] headers = new Configuration().getHeaders();
+		//String[] headers = config.getHeaders();
 		return headers;
 	}
 	
@@ -174,9 +181,9 @@ public class DbGetMapping {
 			conn.close(); //Close connection
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Could not get table information from database.");
 			errorCode = "400";
-			return null; //TODO Proper error handling.
+			return null; 
 		}
 		finally{
 			if (conn != null) conn.close(); //Close connection.

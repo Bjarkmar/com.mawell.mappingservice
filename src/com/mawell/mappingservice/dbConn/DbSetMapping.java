@@ -15,7 +15,7 @@ public class DbSetMapping {
 	public void setValues(String id, String idType, String hsaid, String name, boolean active) throws SQLException {
 	
 		String sqlQuery = "INSERT INTO MappingTable(id , hsaid, id_type, added, active, name ) "
-				+ "VALUES(?, ?, ?, now(), true, ?);";//TODO get Table name from config?
+				+ "VALUES(?, ?, ?, now(), true, ?);";
 		
 		try {
 			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"

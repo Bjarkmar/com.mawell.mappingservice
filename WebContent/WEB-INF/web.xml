@@ -36,4 +36,8 @@
     <servlet-name>AdminServlet</servlet-name>
     <url-pattern>/servlet/AdminServlet</url-pattern>
   </servlet-mapping>
+  <context-param>
+    <param-name>my.context.param</param-name>
+    <param-value>Hello World</param-value>
+</context-param>
 </web-app>

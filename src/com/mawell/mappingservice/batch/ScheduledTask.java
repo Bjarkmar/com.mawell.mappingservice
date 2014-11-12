@@ -11,31 +11,35 @@ import javax.ejb.Stateless;
 import javax.ejb.Timer;
 
 import org.mawell.doa.DbConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import com.mawell.mapid.MapIdSOAPImpl;
 import com.mawell.mappingservice.utils.Configuration;
 import com.mawell.mappingservice.utils.Mail;
 
 @Stateless
 public class ScheduledTask {
-
+	final Logger logger = LogManager.getLogger(ScheduledTask.class.getName());
     /**
      * Default constructor. 
      */
     public ScheduledTask() {
-        System.out.println("Scheduled task initiated");// TODO Auto-generated constructor stub
+    	
+    	logger.info("Scheduled task initiated");
     }
 	Configuration config = new Configuration();
 	//String[] timeParts = config.getNotificationTime().split(":");
 	//@SuppressWarnings("unused")
-	@Schedule(second="0", minute="32", hour="10", dayOfWeek="Mon-Fri",
+	@Schedule(second="0", minute="56", hour="15", dayOfWeek="Mon-Fri",
       dayOfMonth="*", month="*", year="*", info="MyTimer")
     private void scheduledTimeout(final Timer t) {
-        System.out.println("@Schedule called at: " + new java.util.Date());
+        logger.info("@Schedule called at: " + new java.util.Date());
         
         //Get e-mail addresses to be notified.
         
         String[] addressList = new String[2];
-        addressList[0]= config.getNotificationAddress(); //This should be changed to String[]
+        addressList[0]= config.getNotificationAddress(); //TODO This should be changed to String[]
         addressList[1]= config.getNotificationAddress();
         
         
@@ -49,7 +53,7 @@ public class ScheduledTask {
         		boolean test = false;
         		String mailContent = config.getNotifiactionMessage();
         		mailContent += "<table border='0'>";
-        		query.setString(1, addressList[i].toUpperCase());//Change to ...List[i]
+        		query.setString(1, addressList[i].toUpperCase());
         		ResultSet res = query.executeQuery();
         		while(res.next()){
         			test = true;
@@ -63,31 +67,22 @@ public class ScheduledTask {
         		}
         		//Send notification mail...
         		mailContent += "</table>";
-        		System.out.println(test);
         		if (test == true){
         			Mail eMail = new Mail();
-        			eMail.SendMail(mailContent, "andreas.bjarkmar@mawell.com");
-        			System.out.println(mailContent);
-        			Statement deleteStatement = conn.createStatement(); 
-        			deleteStatement.executeUpdate("DELETE FROM notificationtable WHERE notification_receiver ="
-        					+ " 'andreas.bjarkmar@mawell.com'");//Change to ...List[i]vvv
+        			eMail.SendMail(mailContent, addressList[i]);
+        			logger.info("E-mail was sent to " + addressList[i]);
+        			Statement deleteStatement = conn.createStatement();
+        			deleteStatement.executeUpdate("DELETE FROM notificationtable WHERE notification_receiver = '" + addressList[i] + "'");
         		}
-        		
         	}
 			if(conn!= null) conn.close();
         }
         catch(SQLException se){
-        	System.out.println("Error in sql while trying to send stored notifications.");
-        	//TODO Error handling
+        	logger.error("Error in sql while trying to send stored notifications.");
+        	se.printStackTrace();
         }
         catch(Exception e){
-        	//TODO Error handling
-        }
-        try{
-        	
-        }
-        catch(Exception e){
-        	e.printStackTrace();
+        	logger.error("An error occured when trying to send e-mail.");
         }
     }
 }

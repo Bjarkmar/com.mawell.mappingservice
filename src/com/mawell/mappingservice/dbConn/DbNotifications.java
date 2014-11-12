@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mawell.doa.DbConnection;
-
+import com.mawell.mappingservice.utils.Configuration;
 
 /**
  * 
@@ -22,11 +24,10 @@ public class DbNotifications {
 	String[][] returnString = null;
 	Connection conn = null;
 	String errorCode = null;
-	
-	//temp:
 	String hsaid;
 	String int_id;
-	
+	Configuration config = new Configuration();
+	final Logger logger = LogManager.getLogger(DbNotifications.class.getName());
 	/**
 	 * This method returns all notifications of a time 
 	 * @param int days the number of days for how long back to look.
@@ -37,14 +38,8 @@ public class DbNotifications {
 		ResultSet res = null;
 		//Get results from database.
 		String queryString = "SELECT *";
-//		String[] headers = this.getHeaders();
-//		for (int i=0;i<headers.length-1;i++) queryString=queryString+headers[i]+" ,";
 		queryString=queryString + " FROM NotificationTable WHERE DATE_SUB(CURDATE(), INTERVAL "
 				+ days + " DAY) <= time ;";
-		
-//		mysql> SELECT something FROM tbl_name
-//	    -> WHERE DATE_SUB(CURDATE(),INTERVAL 30 DAY) <= date_col;
-		
 		try{
 			conn = DbConnection.MappingDbConn().getConnection();
 			query=conn.prepareStatement(queryString);
@@ -52,10 +47,10 @@ public class DbNotifications {
 			conn.close();
 		}
 		catch (SQLException se){
-			se.printStackTrace();
+			logger.error("An error occured when trying to get previous notifications from database.");
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("An error occured when trying to get previous notifications from database.");
 		}
 		finally{
 			if(conn != null) conn.close();
@@ -67,7 +62,7 @@ public class DbNotifications {
 	public void setValues(String id, String idType, String name, boolean sent, String eMail) throws SQLException {
 		
 		String sqlQuery = "INSERT INTO NotificationTable(id , id_type, time, sent, name, notification_receiver) "
-				+ "VALUES(?, ?, now(), ?, ?, ?);";//TODO get Table name from config?
+				+ "VALUES(?, ?, now(), ?, ?, ?);";
 		
 		try {
 			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
@@ -83,11 +78,11 @@ public class DbNotifications {
 			conn.close();
 		}
 		catch(SQLException se) {
-			se.printStackTrace();
+			logger.error("An error occured when insering notifications to database.");
 			throw se;
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			logger.error("An error occured when insering notifications to database.");
 		}
 		finally {
 			if (conn != null) conn.close();
@@ -117,10 +112,10 @@ public class DbNotifications {
 			conn.close();
 		}
 		catch (SQLException se){
-			se.printStackTrace();
+			logger.error("An error occured when trying to get previous notifications from database.");
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("An error occured when trying to get previous notifications from database.");
 		}
 		finally{
 			//if(conn != null) conn.close();
@@ -140,7 +135,7 @@ public class DbNotifications {
 	 * @return
 	 */
 	public String[] getHeaders(){
-		String[] headers = {"id","hsaid","id_type","added", "name"}; //TODO get from config file.
+		String[] headers = config.getHeaders();
 		return headers;
 	}
 	
@@ -175,7 +170,8 @@ public class DbNotifications {
 		catch (Exception e){
 			e.printStackTrace();
 			errorCode = "400";
-			return null; //TODO Proper error handling.
+			logger.error("Could not get table information from database.");
+			return null; 
 		}
 		finally{
 			if (conn != null) conn.close(); //Close connection.

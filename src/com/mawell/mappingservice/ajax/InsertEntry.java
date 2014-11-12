@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.mawell.mappingservice.dbConn.*;
 import com.mawell.mappingservice.utils.Notification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Servlet implementation class InsertEntry
@@ -18,21 +20,21 @@ import com.mawell.mappingservice.utils.Notification;
 @WebServlet("/InsertEntry/*")
 public class InsertEntry extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	final Logger logger = LogManager.getLogger(InsertEntry.class.getName());
     /**
      * @see HttpServlet#HttpServlet()
      */
     public InsertEntry() {
         super();
-        // TODO Auto-generated constructor stub
+        // Empty contructor
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doPost(request, response);
+		response.setHeader("Access-Control-Allow-Methods", "GET");
 	}
 
 	/**
@@ -45,7 +47,7 @@ public class InsertEntry extends HttpServlet {
 		String name = request.getParameter("name");
 		// Generate response
 		PrintWriter out = response.getWriter();
-        response.setContentType("test/plain");
+        response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Cache-control", "no-cache, no-store");
         response.setHeader("Pragma", "no-cache");
@@ -59,20 +61,17 @@ public class InsertEntry extends HttpServlet {
         try {
         	boolean retval = insertIntoDatabase(id, hsaid, idType, name);
         	if (retval ==true){
-        		response.getWriter().write("success");
-        		return;
+        		int status = 200;
+        		response.setStatus(status);
         	} else {
-        		response.sendError(403, "Could not be inserted into database.");//TODO A specified message should be returned.
+        		logger.warn("Entry with id " + id + " and id type " + idType + " and HSA-id " + hsaid + " could not be inserted into the database.");
+        		response.sendError(403, "Could not be inserted into database.");
         	}
         }
         catch (SQLException se){
-        	se.printStackTrace();//TODO Error handling
-        	Notification notification = new Notification(id, idType, "Namn saknas");
-        	notification.writeLog("There were no connection to the database.", 521);
+        	logger.error("No connection to database. Entry with id " + id + " and id type " + idType + " and HSA-id " + hsaid + " could not be inserted into the database.");
         }
 
-        out.flush();
-        out.close();
 	}
 	
 	
@@ -93,7 +92,6 @@ public class InsertEntry extends HttpServlet {
 				newMapping.setValues(id, idType, hsaid, name, true);
 			}
 			else {
-				//TODO This might be problematic.
 				if(temp.length == 0){
 					DbSetMapping newMapping = new DbSetMapping();
 					newMapping.setValues(id, idType, hsaid, name, true);

@@ -14,10 +14,11 @@ public class Configuration {
 	String rootSource = "http://172.16.40.29:8080/";
 	String link = "com.mawell.mappingservice/";
 	String notificationTableName = "ConfigTable";
+	
 	int noOfDays = 1;
 	
 	String exportFileExtention = "/files/dbexport.csv";
-
+	String[] headers = {"id","hsaid","id_type","added", "name"};
 	String notificationTime = "10:20"; //On the format hh:mm
 	//String path = request.getServletContext().getRealPath("") + "/files/dbexport.csv";
 	
@@ -45,6 +46,10 @@ public class Configuration {
 	 */
 	public String getTableName(){
 		return tableName;
+	}
+	public String[] getHeaders(){
+		String[] headers2 = {"id","hsaid","id_type","added", "name"};
+		return headers;
 	}
 	
 	public String getNotifTable(){

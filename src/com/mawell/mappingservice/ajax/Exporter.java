@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Connection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+
 import org.mawell.doa.DbConnection;
 
+
+import com.mawell.mapid.MapIdSOAPImpl;
 //import com.mawell.mapid.FieldSet;
 //import com.mawell.mappingservice.utils.Configuration;
 import com.mawell.mappingservice.dbConn.DbGetMapping;
@@ -26,13 +32,13 @@ import com.mawell.mappingservice.utils.Configuration;
 @WebServlet("/Exporter/*")
 public class Exporter extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	final Logger logger = LogManager.getLogger(MapIdSOAPImpl.class.getName());
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Exporter() {
         super();
-        // TODO Auto-generated constructor stub
+        // Empty constructor
     }
    
     
@@ -41,8 +47,7 @@ public class Exporter extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Configuration config = new Configuration();
-	    String path = request.getServletContext().getRealPath("") + "\\files\\dbexport.csv"; //TODO This should come from config file or similar.
-	    System.out.println(path);
+	    String path = request.getServletContext().getRealPath("") + config.getExportFile();
 		String dbcontent = getDatabaseContent();
 		PrintWriter writer = new PrintWriter(path, "UTF-8");
 		writer.println(dbcontent);
@@ -63,12 +68,12 @@ public class Exporter extends HttpServlet {
 	        response.setHeader("Access-Control-Max-Age", "86400");
 	       
 	        try {
-	        	response.getWriter().write(config.getWebAddress()+"/files/dbexport.csv");//TODO change this accordingly.
-	        	System.out.println("Sending path to servlet: "+path);
+	        	response.getWriter().write(config.getWebAddress()+ config.getExportFile());
+	        	logger.info("Sending path to servlet: ");
+	        	logger.debug(path);
 	        }
 	        catch(Exception e){
-	        	e.printStackTrace();
-	        	System.out.println("Error in writing to file.");
+	        	logger.error("Error while writing to file.");
 	        }
 	        finally{
 	        	out.flush();
@@ -80,10 +85,10 @@ public class Exporter extends HttpServlet {
 	private String getDatabaseContent(){
 		//Initiate csv-file.
 		String csvString = "Id;RIS-id;HSA-id;Namn;Tillagd\r";//TODO Get from config
-		
+		Connection conn1 = null;
 		try {
 			//Create connection
-			Connection conn1 = DbConnection.MappingDbConn().getConnection(); 
+			conn1 = DbConnection.MappingDbConn().getConnection(); 
 			// Get results from database.
 			DbGetMapping database = new DbGetMapping(conn1);
 			ResultSet results;
@@ -95,20 +100,24 @@ public class Exporter extends HttpServlet {
 				csvString = csvString + results.getString("id")+";"+results.getString("id_type")
 						+";"+results.getString("hsaid")+";"+results.getString("name")+";"+results.getString("added")+"\r";
 			}
-			conn1.close(); //TODO move to finally statement
+			conn1.close();
 		}
 		catch (SQLException se){
-			se.printStackTrace();
-			System.out.println("Error while getting results from database.");
+			logger.error("Error while getting results from database.");
+			logger.debug(se.getMessage());
 			return null;
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Error while constructing the Export file.");
+			logger.debug(e.getMessage());
 		}
 		finally {
+			try {
+					conn1.close();
+				} catch (Exception sse){
+					logger.error("Can not close database connection.");
+				}
 		}
-		//System.out.println(csvString);
-		//Return result
 		return csvString;
 	}
 }

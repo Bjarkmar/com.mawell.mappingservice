@@ -373,11 +373,10 @@ setTimeout(function(){
         async: false,
         cache: true,
        type: "GET",
-       contentType: "application/json; charset=UTF-8",
+       contentType: "text/html; charset=UTF-8",
        success:
            function (data) {
     	   	   toggleSendButton("Success", "Skickat");
-               alert(data);
             },
         error: function (jqXHR, textStatus, err) {
         	toggleSendButton("Fail", "Misslyckades");
@@ -500,7 +499,7 @@ window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari
 function exportData(){
 
     $.ajax({
-    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/Exporter/",//TODO mapper1.bfr.vgregion.se
+    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/Exporter/",//TODO 172.16.40.29/mapper1.bfr.vgregion.se
         cache: true,
        type: "POST",
        contentType: "application/json; charset=UTF-8",

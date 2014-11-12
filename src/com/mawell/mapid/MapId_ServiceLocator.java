@@ -23,7 +23,7 @@ public class MapId_ServiceLocator extends org.apache.axis.client.Service impleme
     }
 
     public MapId_ServiceLocator(java.lang.String wsdlLoc, javax.xml.namespace.QName sName) throws javax.xml.rpc.ServiceException {
-        super(wsdlLoc, sName);
+    	super(wsdlLoc, sName);
     }
 
     // Use to get a proxy class for MapIdSOAP
