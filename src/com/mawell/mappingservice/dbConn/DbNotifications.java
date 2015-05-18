@@ -12,9 +12,10 @@ import com.mawell.mappingservice.utils.Configuration;
 
 /**
  * 
- * @author Andreas Bj‰rkmar
- * @date 2014-03-04
- * @version 0.1
+ * @author Andreas Bj√§rkmar
+ * @date 2015-04-14
+ * @version 0.2
+ * Updated to handle a connection from constructor
  *
  */
 public class DbNotifications {
@@ -27,45 +28,28 @@ public class DbNotifications {
 	String hsaid;
 	String int_id;
 	Configuration config = new Configuration();
+	Boolean ReuseConnection =false;
 	final Logger logger = LogManager.getLogger(DbNotifications.class.getName());
-	/**
-	 * This method returns all notifications of a time 
-	 * @param int days the number of days for how long back to look.
-	 * @return ResultSet with the results corresponding to request
-	 * @throws SQLException
-	 */
-	public ResultSet getPreviousNotifications(int days) throws SQLException{
-		ResultSet res = null;
-		//Get results from database.
-		String queryString = "SELECT *";
-		queryString=queryString + " FROM NotificationTable WHERE DATE_SUB(CURDATE(), INTERVAL "
-				+ days + " DAY) <= time ;";
-		try{
-			conn = DbConnection.MappingDbConn().getConnection();
-			query=conn.prepareStatement(queryString);
-			res = query.executeQuery();
-			conn.close();
-		}
-		catch (SQLException se){
-			logger.error("An error occured when trying to get previous notifications from database.");
-		}
-		catch (Exception e){
-			logger.error("An error occured when trying to get previous notifications from database.");
-		}
-		finally{
-			if(conn != null) conn.close();
-		}
-		return res;
+	
+	public DbNotifications (Connection c){
+		conn = c;
+		ReuseConnection = true;
 	}
-
-
+	public DbNotifications (){
+		try{
+			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
+		} catch(SQLException se) {
+			logger.error("An error occured when inserting notifications to database.");
+		} catch (Exception e){
+			logger.error("An error occured when inserting notifications to database.");
+		}
+	}
 	public void setValues(String id, String idType, String name, boolean sent, String eMail) throws SQLException {
 		
 		String sqlQuery = "INSERT INTO NotificationTable(id , id_type, time, sent, name, notification_receiver) "
 				+ "VALUES(?, ?, now(), ?, ?, ?);";
 		
 		try {
-			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
 			query = conn.prepareStatement(sqlQuery); //SQL query
 			//Set parameters.
 			query.setString(1, id);
@@ -75,17 +59,18 @@ public class DbNotifications {
 			query.setString(5, eMail);
 			//Execute query
 			query.executeUpdate();
-			conn.close();
+			query.close();
+			if (ReuseConnection == false) conn.close();
 		}
 		catch(SQLException se) {
-			logger.error("An error occured when insering notifications to database.");
+			logger.error("An error occured when inserting notifications to database.");
 			throw se;
 		}
 		catch(Exception e) {
-			logger.error("An error occured when insering notifications to database.");
+			logger.error("An error occured when inserting notifications to database.");
 		}
 		finally {
-			if (conn != null) conn.close();
+			if (conn != null && ReuseConnection == false) conn.close();
 		}
 	}
 	
@@ -101,7 +86,7 @@ public class DbNotifications {
 		String queryString = "SELECT COUNT(*) FROM NotificationTable WHERE id = ? and id_type = ?";
 		int number=1;
 		try{
-			conn = DbConnection.MappingDbConn().getConnection();
+			//conn = DbConnection.MappingDbConn().getConnection();
 			query=conn.prepareStatement(queryString);
 			query.setString(1, id);
 			query.setString(2, idType);
@@ -109,7 +94,9 @@ public class DbNotifications {
 			while (res.next()){
 				number = res.getInt(1);
 			} 
-			conn.close();
+			res.close();
+			query.close();
+			if(ReuseConnection == false) conn.close();
 		}
 		catch (SQLException se){
 			logger.error("An error occured when trying to get previous notifications from database.");
@@ -118,7 +105,11 @@ public class DbNotifications {
 			logger.error("An error occured when trying to get previous notifications from database.");
 		}
 		finally{
-			//if(conn != null) conn.close();
+			try {
+				if(conn.isClosed() == false && ReuseConnection == false) conn.close();
+			} catch(SQLException se){
+				//TODO fix this
+			}
 		}
 		if (number < 1){
 			return true;
@@ -146,7 +137,7 @@ public class DbNotifications {
 	 * 1 element shorter than the number of columns in the table.
 	 * 
 	 * @date 2014-03-10
-	 * @author Andreas Bj‰rkmar
+	 * @author Andreas Bj√§rkmar
 	 * @return String[] an array with the column names of the table.
 	 * @throws SQLException
 	 * @version v1.0
@@ -154,7 +145,7 @@ public class DbNotifications {
 	public String[] getTableHeaders() throws SQLException{
 		String[] headers;
 		try{
-			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
+			//conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
 			query = conn.prepareStatement("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'mappingtable' AND table_schema = 'mappingdb';"); //This is the SQL query
 			ResultSet rs = query.executeQuery();
 			rs.last();
@@ -165,7 +156,9 @@ public class DbNotifications {
 				headers[i] = rs.getString(1); //place column names from DB in array.
 				i++;
 			}
-			conn.close(); //Close connection
+			rs.close();
+			query.close();
+			if(ReuseConnection == false) conn.close(); //Close connection
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -174,13 +167,14 @@ public class DbNotifications {
 			return null; 
 		}
 		finally{
-			if (conn != null) conn.close(); //Close connection.
+			if (query != null) query.close();
+			if (conn != null && ReuseConnection ==false) conn.close(); //Close connection.
 		}
 		return headers;
 	}
 	
 	/**
-	 * This method returns the error code if an exception is thown of the class.
+	 * This method returns the error code if an exception is thrown of the class.
 	 * If no error was found the return string is null.
 	 * 
 	 * @return String errorCode

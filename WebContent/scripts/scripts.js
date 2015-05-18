@@ -7,6 +7,7 @@ var idTypeInput;
 var hsaidInput;
 
 var dataHasBeenSent = false;
+var dataToOverride = false;
 
 var idCheck = false;
 var idTypeCheck = false;
@@ -51,7 +52,7 @@ var importData = [
 	  visible : false,
 	  preset : true,
 	  placeHolder : ""
-  },
+  }
 
   
 ]
@@ -335,7 +336,7 @@ function validateImportForm(obj){
 		$("#import_submitButton").click(function(){
 			if(!dataHasBeenSent){
 				closeErrorMsg();
-				sendData();
+				sendData(dataToOverride);
 				dataHasBeenSent = true;
 			}
 		});
@@ -355,10 +356,10 @@ function removeSuccessClass(id){
 }
 
 //Configuration based on server.
-function sendData(){
+function sendData(override){
 	toggleSendButton("Loading", "Skickar");
 	
-	var urlParams = "id=" + idInput + "&idType=" + idTypeInput + "&hsaid=" + hsaidInput;
+	var urlParams = "id=" + idInput + "&idType=" + idTypeInput + "&hsaid=" + hsaidInput + "&override=false" ;
 	
 	if($("#name_input").val() != ""){
 		urlParams += "&name=" + $("#name_input").val();
@@ -368,18 +369,25 @@ setTimeout(function(){
 	console.log(urlParams);
 	
 	
-    $.ajax({
-    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/InsertEntry/?" + urlParams, //mapper1.bfr.vgregion.se
-        async: false,
-        cache: true,
-       type: "GET",
-       contentType: "text/html; charset=UTF-8",
+	$.ajax({
+    	type: "POST",
+    	url: "http://mapper1.bfr.vgregion.se:8080/com.mawell.mappingservice/InsertEntry/?", //TODO 172.16.40.11 / mapper1.bfr.vgregion.se
+       data: { 	id: idInput,
+    	   		idType: idTypeInput,
+    	   		hsaid: hsaidInput,
+    	   		name: $("#name_input").val(),
+    	   		override:  override
+       },
        success:
            function (data) {
     	   	   toggleSendButton("Success", "Skickat");
             },
         error: function (jqXHR, textStatus, err) {
-        	toggleSendButton("Fail", "Misslyckades");
+        	if (jqXHR.status == 403){
+        		toggleSendButton("Fail", "Finns redan");
+        	} else {
+        		toggleSendButton("Fail", "Misslyckades");
+        	}
             $('#divError').addClass("error");
             $('#closeErrorBox').addClass("closeErrorShow");
             $('#divError').html('Error: ' + err);
@@ -398,7 +406,7 @@ function toggleSendButton(param, label){
 			width: '52px'
 		}, 150);
 	}
-	else if (label == "Misslyckades"){
+	else if (label == "Misslyckades" || label == "Finns redan"){
 		$(button).animate({
 			width: "98px"
 		}, 200)
@@ -414,7 +422,13 @@ function toggleSendButton(param, label){
 	});
 				
 //	if(label == "Misslyckades" && (hsaidCheck && (!activeViewExtended || (idCheck && idTypeCheck)))){
-	if(label == "Misslyckades" && hsaidCheck && idCheck && idTypeCheck){
+	if(label == "Finns redan" && hsaidCheck && idCheck && idTypeCheck){
+		setTimeout(function(){
+			dataToOverride = true;
+			setOverrideButton(button);
+		}, 1000);
+	}
+	if(label == "Misslyckades" && hsaidCheck && idCheck && idTypeCheck){//This is not called because s is remoiverd in "Misslyckades".
 		setTimeout(function(){
 			setRetryButton(button);
 		}, 5000);
@@ -428,6 +442,18 @@ function setRetryButton(button){
 	
 		$(button).removeClass('uploadButtonFail');
 		$(button).html("Försök igen");
+		$(button).addClass("uploadButtonTryagain");
+		
+		dataHasBeenSent = false;
+	});
+}
+function setOverrideButton(button){
+	$(button).animate({
+		width: "120px"
+	}, 300, function(){
+	
+		$(button).removeClass('uploadButtonFail');
+		$(button).html("Ersätt befintlig");
 		$(button).addClass("uploadButtonTryagain");
 		
 		dataHasBeenSent = false;
@@ -447,7 +473,7 @@ function resetLoadingButton(button){
 	
 	$(button).html("Skickar");
 
-	sendData();
+	sendData(true);
 }
 
 //DOWNLOAD SCRIPT BEGINS HERE
@@ -499,7 +525,7 @@ window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari
 function exportData(){
 
     $.ajax({
-    	url: "http://172.16.40.29:8080/com.mawell.mappingservice/Exporter/",//TODO 172.16.40.29/mapper1.bfr.vgregion.se
+    	url: "http://mapper1.bfr.vgregion.se:8080/com.mawell.mappingservice/Exporter/",//TODO 172.16.40.11/mapper1.bfr.vgregion.se
         cache: true,
        type: "POST",
        contentType: "application/json; charset=UTF-8",

@@ -10,9 +10,7 @@ package com.mawell.mapid;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.*;
+//import javax.servlet.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,8 +18,9 @@ import org.apache.logging.log4j.Logger;
 import com.mawell.mapid.FieldSet;
 import com.mawell.mappingservice.dbConn.DbGetMapping;
 import com.mawell.mappingservice.utils.Notification;
-import com.mawell.mappingservice.utils.LoggerClass;
-import com.mawell.mappingservice.utils.Configuration;
+//import com.mawell.mappingservice.utils.LoggerClass;
+//import com.mawell.mappingservice.utils.Configuration;
+
 import org.mawell.doa.DbConnection;
 
 public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
@@ -31,7 +30,8 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     	FieldSet[] response = null;
     	String errorCode = null;
     	String displayName;
-    	Connection conn=null;
+    	Connection conn;
+    	
     	final Logger logger = LogManager.getLogger(MapIdSOAPImpl.class.getName());
     	if (input.length > 0) {
     		displayName = input[0].getValue();
@@ -39,10 +39,24 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     	else{
     		displayName = "Namn saknas";
     	}
+    	try {
+			conn = DbConnection.MappingDbConn().getConnection();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			response = new FieldSet[1];
+			response[0]=new FieldSet("error","510");//TODO Check error code for DB-conn lost.
+			conn = null;
+			return response;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			response = new FieldSet[1];
+			response[0]=new FieldSet("error","510");//TODO Check error code for DB-conn lost.
+			conn = null;
+			return response;
+		}
+    	
     	if(id.length() > 0 && idType.length() > 0){
-    		
     		try {
-    			conn = DbConnection.MappingDbConn().getConnection();
         		DbGetMapping Mapper = new DbGetMapping(conn);
     			String[] columns = Mapper.getHeaders(); //Gets the column names of the table.
     			//Getting values from input object into string arrays. Not an optimal solution.
@@ -77,12 +91,6 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     			logger.error("The request was not valid.");
     		}
     		finally {
-				if (conn != null) {
-					try {
-						conn.close();
-					}
-					catch(SQLException e){}
-				}
     		}
     		//return response;
     	}
@@ -98,7 +106,7 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     			logger.info("Could not find any mapping for id: " + id + " and id type: " + idType);
     			response = new FieldSet[0];//If error is no match in DB send empty response.
     		}
-			Notification notification = new Notification(id, idType, displayName);
+			Notification notification = new Notification(id, idType, displayName, conn);
 			notification.sendNotification();
     	}
         return response;

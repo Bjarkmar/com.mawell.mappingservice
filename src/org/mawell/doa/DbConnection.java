@@ -4,7 +4,7 @@ import javax.naming.*;
 import javax.sql.*;
 /**
  * 
- * @author Andreas Bj‰rkmar
+ * @author Andreas Bj√§rkmar
  * @version 1.0
  * Changed 2014-02-18
  */

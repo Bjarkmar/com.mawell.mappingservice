@@ -1,6 +1,4 @@
 package com.mawell.mappingservice.utils;
-
-import com.mawell.mapid.MapIdSOAPImpl;
 import com.mawell.mappingservice.utils.Configuration;
 import com.mawell.mappingservice.dbConn.*;
 
@@ -10,7 +8,12 @@ import org.apache.logging.log4j.Logger;
 import java.util.Date;
 import java.io.*;
 import java.sql.*;
-
+/**
+ * Notification class to handle the notifications.
+ * @author Andreas Bjärkmar
+ * 2015-04-14: Added functionality to pass on DB-connection.
+ *
+ */
 public class Notification {
 	String id;
 	String idType;
@@ -18,7 +21,13 @@ public class Notification {
 	Configuration config = new Configuration();
 	String name = "";
 	final Logger logger = LogManager.getLogger(Notification.class.getName());
-	
+	Connection conn = null;
+	public Notification (String s_id, String s_idType, String s_displayName, Connection c) {
+		id = s_id;
+		idType = s_idType;
+		displayName = s_displayName;
+		conn = c;
+	}
 	public Notification (String s_id, String s_idType, String s_displayName) {
 		id = s_id;
 		idType = s_idType;
@@ -34,11 +43,12 @@ public class Notification {
 	
 	
 	/**
-	 * This method sends a notifiaction according to rules set up in configuration.
+	 * This method sends a notification according to rules set up in configuration.
+	 * Changed to pass the db-connection.
 	 */
 	
 	public void sendNotification(){
-		DbNotifications notifications = new DbNotifications();
+		DbNotifications notifications = new DbNotifications(conn);
 		//if (notifications.checkNotification(id, idType)) return;
 		String eMail = config.getNotificationAddress(idType);
 		try {

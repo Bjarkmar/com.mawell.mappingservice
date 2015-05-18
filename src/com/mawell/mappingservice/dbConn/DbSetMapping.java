@@ -27,6 +27,7 @@ public class DbSetMapping {
 			query.setString(4, name);
 			//Execute query
 			query.executeUpdate();
+			query.close();
 			conn.close();
 		}
 		catch(SQLException se) {
@@ -37,6 +38,37 @@ public class DbSetMapping {
 			e.printStackTrace();
 		}
 		finally {
+			if (query != null) query.close();
+			if (conn != null) conn.close();
+		}
+	}
+	//Overwrite
+	public void replaceValues(String id, String idType, String hsaid, String name, boolean active) throws SQLException {
+		
+		String sqlQuery = "UPDATE MappingTable SET hsaid = ?, name = ? WHERE id = ? AND id_type = ?;";
+		
+		try {
+			conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
+			query = conn.prepareStatement(sqlQuery); //SQL query
+			//Set parameters.
+			query.setString(1, hsaid);
+			query.setString(2, name);
+			query.setString(3, id);
+			query.setString(4, idType);
+			//Execute query
+			query.executeUpdate();
+			query.close();
+			conn.close();
+		}
+		catch(SQLException se) {
+			se.printStackTrace();
+			throw se;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (query != null) query.close();
 			if (conn != null) conn.close();
 		}
 	}

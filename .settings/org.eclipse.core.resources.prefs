@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//WebContent/index.html=ISO-8859-1
+encoding//WebContent/scripts/scripts.js=ISO-8859-1
 encoding//src/com/mawell/mapid/FieldSet.java=UTF-8
 encoding//src/com/mawell/mapid/MapIdSOAPImpl.java=UTF-8
 encoding//src/com/mawell/mapid/MapIdSOAPSkeleton.java=UTF-8
@@ -7,3 +9,4 @@ encoding//src/com/mawell/mapid/MapId_PortType.java=UTF-8
 encoding//src/com/mawell/mapid/MapId_Service.java=UTF-8
 encoding//src/com/mawell/mapid/MapId_ServiceLocator.java=UTF-8
 encoding//src/com/mawell/mapid/SearchFields.java=UTF-8
+encoding/<project>=UTF-8

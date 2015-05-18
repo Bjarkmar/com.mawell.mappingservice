@@ -7,32 +7,31 @@ public class Configuration {
 	public Configuration(){
 	}
 	//Configurations test
-	String tableName = "MappingTable";
-	String notificationAddress = "andreas.bjarkmar@mawell.com";
-	String logFileRoot = "C:/temp/";
-	String logFileName = "MappingServiceLog.txt";
-	String rootSource = "http://172.16.40.29:8080/";
-	String link = "com.mawell.mappingservice/";
-	String notificationTableName = "ConfigTable";
-	
-	int noOfDays = 1;
-	
-	String exportFileExtention = "/files/dbexport.csv";
-	String[] headers = {"id","hsaid","id_type","added", "name"};
-	String notificationTime = "10:20"; //On the format hh:mm
-	//String path = request.getServletContext().getRealPath("") + "/files/dbexport.csv";
-	
-	//Configurations customer test
-	
 //	String tableName = "MappingTable";
 //	String notificationAddress = "andreas.bjarkmar@mawell.com";
 //	String logFileRoot = "C:/temp/";
 //	String logFileName = "MappingServiceLog.txt";
-//	String exportFileRoot = "C:/temp/";
-//	String rootSource = "http://mapper1.bfr.vgregion.se:8080/";
+//	String rootSource = "http://172.16.40.29:8080/";
 //	String link = "com.mawell.mappingservice/";
 //	String notificationTableName = "ConfigTable";
 //	int noOfDays = 1;
+	
+	String exportFileExtention = "/files/dbexport.csv";
+	String[] headers = {"id","hsaid","id_type","added", "name"};
+	String notificationTime = "14:45"; //On the format hh:mm
+	//String path = request.getServletContext().getRealPath("") + "/files/dbexport.csv";
+	
+	//Configurations customer test
+	
+	String tableName = "MappingTable";
+	String notificationAddress = "andreas.bjarkmar@mawell.com";
+	String logFileRoot = "C:/temp/";
+	String logFileName = "MappingServiceLog.txt";
+	String exportFileRoot = "C:/temp/";
+	String rootSource = "http://mapper1.bfr.vgregion.se:8080/";
+	String link = "com.mawell.mappingservice/";
+	String notificationTableName = "ConfigTable";
+	int noOfDays = 1;
 	
 	
 	//Not used in current set up.
@@ -49,7 +48,7 @@ public class Configuration {
 	}
 	public String[] getHeaders(){
 		String[] headers2 = {"id","hsaid","id_type","added", "name"};
-		return headers;
+		return headers2; //TODO This used to be haeders does this change anything?
 	}
 	
 	public String getNotifTable(){
@@ -58,7 +57,7 @@ public class Configuration {
 	
 	public String getNotifiactionMessage(){
 		
-		String message = "Följande avdelningar saknar korrekt HSA-id. Klicka på länken till höger i respektive rad för att lägga till HSA-id alternativt klicka <a href='"+rootSource+link+"'>här</a> för att lägga till en ny mappning.<br/><br/>";
+		String message = "FÃ¶ljande avdelningar saknar korrekt HSA-id. Klicka pÃ¥ lÃ¤nken till hÃ¶ger i respektive rad fÃ¶r att lÃ¤gga till HSA-id alternativt klicka <a href='"+rootSource+link+"'>hÃ¤r</a> fÃ¶r att lÃ¤gga till en ny mappning.<br/><br/>";
 		return message;
 	}
 	/**

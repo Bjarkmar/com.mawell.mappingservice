@@ -5,9 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//import javax.sql.DataSource;
+
 import org.mawell.doa.DbConnection;
 
-import com.mawell.mapid.MapIdSOAPImpl;
 import com.mawell.mappingservice.utils.Configuration;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * 
- * @author Andreas Bj‰rkmar
+ * @author Andreas Bj√§rkmar
  * @date 2014-03-04
  * @version 0.1
  *
@@ -30,6 +31,7 @@ public class DbGetMapping {
 	Configuration config;
 	String hsaid;
 	String int_id;
+	boolean reuseConnection = false;
 	final Logger logger = LogManager.getLogger(DbGetMapping.class.getName());
 	public DbGetMapping(){
 		try {
@@ -42,6 +44,7 @@ public class DbGetMapping {
 	}
 	public DbGetMapping(Connection openConnection){
 		conn = openConnection;
+		reuseConnection = true;
 	}
 
 	
@@ -64,9 +67,9 @@ public class DbGetMapping {
 			logger.error("An error occured while connectiong to database.");
 		}
 		finally{
-			//if (res != null) res.close();
-			//if (query != null) query.close();
-			//if(conn != null) conn.close();
+		//	if (res != null) res.close();
+		//	if (query != null) query.close();
+		//	if(conn != null && reuseConnection == false) conn.close();
 		}
 		return res;
 	}
@@ -74,7 +77,7 @@ public class DbGetMapping {
 	 * The method returns a String array with all posts in the mapping table that matches
 	 * the contraints in the argument in the form of:
 	 * select * where column[i] = row[i];
-	 * @author Andreas Bj‰rkmar
+	 * @author Andreas Bj√§rkmar
 	 * @date 2014-05-21
 	 * @version 0.1
 	 * 
@@ -95,6 +98,7 @@ public class DbGetMapping {
 				sqlQuery = sqlQuery + column[j] + " = ? AND ";
 		}
 		sqlQuery = sqlQuery + column[column.length-1] + " = ? ;";
+
 		try {
 			//conn = DbConnection.MappingDbConn().getConnection(); //Get the connection "MappingDbConn"
 			query = conn.prepareStatement(sqlQuery); //SQL query
@@ -115,13 +119,14 @@ public class DbGetMapping {
 		        		returnString[i][j] = rs.getString(this.getHeaders()[j]);
 		        	}
 		        }
+		        rs.close();
 			}
 			else{
 				errorCode ="510";//No matching entries in DB.
 				returnString= null;
 			}
-			
-			conn.close(); //Close connection
+			query.close();
+			if(reuseConnection == false) conn.close(); //Close connection
 			
 		}
 		catch (SQLException se)
@@ -137,7 +142,8 @@ public class DbGetMapping {
 			returnString = null; 
 		}
 		finally{
-			//if (conn != null) conn.close(); //Close connection.
+			if (query != null) query.close();
+			if(conn != null && reuseConnection == false) conn.close(); //Close connection.
 		}
 		return returnString;
 	}
@@ -159,10 +165,11 @@ public class DbGetMapping {
 	 * 1 element shorter than the number of columns in the table.
 	 * 
 	 * @date 2014-03-10
-	 * @author Andreas Bj‰rkmar
+	 * @author Andreas Bj√§rkmar
 	 * @return String[] an array with the column names of the table.
 	 * @throws SQLException
-	 * @version v1.0
+	 * @version v1.1
+	 * 1.1 Updated to get passed connection
 	 */
 	public String[] getTableHeaders() throws SQLException{
 		String[] headers;
@@ -178,6 +185,8 @@ public class DbGetMapping {
 				headers[i] = rs.getString(1); //place column names from DB in array.
 				i++;
 			}
+			rs.close();
+			query.close();
 			conn.close(); //Close connection
 		}
 		catch (Exception e){
@@ -186,7 +195,8 @@ public class DbGetMapping {
 			return null; 
 		}
 		finally{
-			if (conn != null) conn.close(); //Close connection.
+			if (query != null) query.close();
+			if(conn != null && reuseConnection == false) conn.close(); //Close connection.
 		}
 		return headers;
 	}

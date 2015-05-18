@@ -49,7 +49,7 @@ public class Exporter extends HttpServlet {
 		Configuration config = new Configuration();
 	    String path = request.getServletContext().getRealPath("") + config.getExportFile();
 		String dbcontent = getDatabaseContent();
-		PrintWriter writer = new PrintWriter(path, "UTF-8");
+		PrintWriter writer = new PrintWriter(path, "Cp1252");
 		writer.println(dbcontent);
 		writer.close();
 		
