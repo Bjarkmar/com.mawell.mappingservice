@@ -53,7 +53,7 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
 			response[0]=new FieldSet("error","510");//TODO Check error code for DB-conn lost.
 			conn = null;
 			return response;
-		}
+		}//TODO Close connection?
     	
     	if(id.length() > 0 && idType.length() > 0){
     		try {
@@ -90,7 +90,7 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
     			errorCode="520"; //I get here if sending in unmatched Strings
     			logger.error("The request was not valid.");
     		}
-    		finally {
+    		finally {//TODO Close connection
     		}
     		//return response;
     	}
@@ -109,6 +109,12 @@ public class MapIdSOAPImpl implements com.mawell.mapid.MapId_PortType{
 			Notification notification = new Notification(id, idType, displayName, conn);
 			notification.sendNotification();
     	}
+    	
+			try {
+				if (conn.isClosed() != true ) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
         return response;
     }
 }
