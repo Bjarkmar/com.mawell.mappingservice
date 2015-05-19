@@ -39,7 +39,6 @@ public class DbGetMapping {
 			Connection conn = DbConnection.MappingDbConn().getConnection(); 
 		} catch (Exception se){
 			logger.error("Connection to database could not be established.");
-
 		}
 	}
 	public DbGetMapping(Connection openConnection){
@@ -67,9 +66,9 @@ public class DbGetMapping {
 			logger.error("An error occured while connectiong to database.");
 		}
 		finally{
-		//	if (res != null) res.close();
-		//	if (query != null) query.close();
-		//	if(conn != null && reuseConnection == false) conn.close();
+		//	if (res.isClosed() != true) res.close();
+		query.closeOnCompletion();
+		//	if(conn.isClosed() != true && reuseConnection == false) conn.close();
 		}
 		return res;
 	}
@@ -119,12 +118,13 @@ public class DbGetMapping {
 		        		returnString[i][j] = rs.getString(this.getHeaders()[j]);
 		        	}
 		        }
-		        rs.close();
+		        
 			}
 			else{
 				errorCode ="510";//No matching entries in DB.
 				returnString= null;
 			}
+			rs.close();
 			query.close();
 			if(reuseConnection == false) conn.close(); //Close connection
 			
@@ -142,8 +142,8 @@ public class DbGetMapping {
 			returnString = null; 
 		}
 		finally{
-			if (query != null) query.close();
-			if(conn != null && reuseConnection == false) conn.close(); //Close connection.
+			if (query.isClosed() != true) query.close();
+			if(conn.isClosed() != true && reuseConnection == false) conn.close(); //Close connection.
 		}
 		return returnString;
 	}
@@ -195,8 +195,8 @@ public class DbGetMapping {
 			return null; 
 		}
 		finally{
-			if (query != null) query.close();
-			if(conn != null && reuseConnection == false) conn.close(); //Close connection.
+			if (query.isClosed() != true) query.close();
+			if(conn.isClosed() != true ) conn.close(); //Close connection.
 		}
 		return headers;
 	}
