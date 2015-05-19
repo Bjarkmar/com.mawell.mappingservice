@@ -100,6 +100,7 @@ public class Exporter extends HttpServlet {
 				csvString = csvString + results.getString("id")+";"+results.getString("id_type")
 						+";"+results.getString("hsaid")+";"+results.getString("name")+";"+results.getString("added")+"\r";
 			}
+			results.close();
 			conn1.close();
 		}
 		catch (SQLException se){
